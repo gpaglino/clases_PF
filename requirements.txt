@@ -1,3 +1,6 @@
-flask
+flask == 2.3.3
 flask-mysqldb
-PyJWT
+pip == 1.0.4
+PyJWT = 2.8.0
+
+flask-cors

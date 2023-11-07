@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang='es-AR'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Clase </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    
+    <body>
+        <form>
+            <label for="in-username"> Usuario: </label>
+            <input type="text" id="in-username">
+
+            <label for="in-password"> Contraseña: </label>
+            <input type="password" id="in-password">
+            <input type="button" onclick="iniciarSesion()" vaule="Iniciar sección">
+
+            
+        </form>
+        <span id="message"></span>
+    </body>
+    
+    <script>
+        window.onload = function(){
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('id');
+        // para cuando se recarga la pagina del login no quede informacion guargada 
+    }
+        function iniciarSesion(){
+            document.getElementById("message").innerHTML = ''; //cada vez que le doy iniciar seccion borro lo que antes se
+            
+            const username = document.getElementById('in-username').value;
+            const password = document.getElementById('in-password').value;
+
+            const requestOptions = { //INDICAMOS CON UN OBJETO QUE METODO VAMOS A UTILIZAR Y DEBE COINCIDIR 
+                method:'POST',            
+                headers:{
+                    'Content-Type' : 'application/json',
+                    'Authorization' :  'Basic ' + btoa(username + ":" + password) //la funcion btoa es la que se encarga de codificar en el formato que necesitamos
+                }
+            }
+        fetch('http://127.0.0.1:4500/login', requestOptions)
+        .then(
+            res => {return res.json()}
+            )
+        .then(
+                        resp => {
+                            console.log(resp)
+                            if (resp.token){
+                                localStorage.setItem('token', resp.token);
+                                localStorage.setItem('username', resp.username);
+                                localStorage.setItem('id', resp.id);
+                                document.getElementById("message").innerHTML = "Bienvenido " + resp.username;
+                                window.location.href ="dashboard.html";
+
+                            }
+                            else{
+                                document.getElementById("message").innerHTML = resp.message;
+                            }
+
+                            
+
+                        }
+        )
+
+        }
+    </script>
+</html>

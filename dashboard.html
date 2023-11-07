@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang='es-AR'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Dashboard </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/breakpoints.css">
+    </head>
+    
+    <body>
+        <h1> Bienvenidos <span id="username"> </span></h1>
+        <button onclick="cargarCliente()"> Cargar Clientes </button>
+    </body>
+    <script>
+        window.onload = function(){
+            const token = localStorage.getItem('token');
+            if (token) {
+                const username = localStorage.getItem('username');
+                document.getElementById("username").innerHTML = username;
+            }
+            else {
+                window.location.href = 'login.html';
+        } 
+    }
+        //bloquear la permanencia en esta pagina 
+    
+        function cargarCliente(){
+
+            const id=localStorage.getItem('id');
+            const token = localStorage.getItem('token');
+            const requestOptions ={
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': token, //es lo equivalente a copiar el token del login en la api
+                    'user-id': id
+                }
+            } 
+            fetch(`http://127.0.0.1:4500/user/${id}/client`, requestOptions) // se usan esas comillas curvas para  reemplazar parte de la url
+            .then(
+                resp => { return resp.json()} //se usa el metodo.json para que nos devuelva un json
+            )
+            .then(
+                resp => {
+                    console.log(resp);
+                    resp.forEach(cliente => {
+                        mostrarCliente(cliente);
+                    })
+                }
+            )
+        function mostrarCliente(cliente){ 
+            console.log(cliente.name);
+        }    
+        }
+    </script>
+</html>
